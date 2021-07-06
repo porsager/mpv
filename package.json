@@ -1,0 +1,23 @@
+{
+  "name": "mpv",
+  "version": "0.0.0",
+  "description": "mpv player json ipc wrapper",
+  "main": "index.js",
+  "scripts": {
+    "lint": "eslint *.js",
+    "prepublishOnly": "npm run lint"
+  },
+  "files": [
+    "index.js",
+    "socket.js"
+  ],
+  "author": "Rasmus Porsager <rasmus@porsager.com>",
+  "license": "WTFPL",
+  "repository": "porsager/mpv",
+  "keywords": [
+    "mpv.js",
+    "mpv",
+    "player",
+    "mediaplayer"
+  ]
+}
