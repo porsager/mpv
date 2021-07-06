@@ -1,6 +1,6 @@
 {
   "name": "mpv",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "mpv player json ipc wrapper",
   "main": "index.js",
   "scripts": {
