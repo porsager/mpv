@@ -13,8 +13,6 @@ function Mpv({
 } = {}) {
   args = args.slice(0)
   const mpv = new events.EventEmitter()
-  const listeners = {}
-  let observeId = 0
 
   const socketPath = win32 ? '\\\\.\\pipe\\mpvsocket' : '/tmp/mpvsocket'
 
@@ -55,28 +53,7 @@ function Mpv({
   mpv.set = (...args) => mpv.socket.send('set_property', ...args)
   mpv.get = (...args) => mpv.socket.send('get_property', ...args)
 
-  mpv.on('newListener', name => {
-    if (name in listeners || ignoreEvent(name))
-      return
-
-    mpv.socket.send('observe_property', listeners[name] = ++observeId, name)
-       .catch(err => mpv.emit('error', err))
-  })
-
-  mpv.on('removeListener', name => {
-    if (mpv.listenerCount(name) > 0 || ignoreEvent(name))
-      return
-
-    mpv.socket.send('unobserve_property', listeners[name], name)
-       .catch(err => mpv.emit('error', err))
-    delete listeners[name]
-  })
-
   return mpv
-}
-
-function ignoreEvent(name) {
-  return name === 'removeListener' || name === 'newListener'
 }
 
 module.exports = Mpv

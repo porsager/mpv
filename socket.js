@@ -36,7 +36,7 @@ module.exports = function Socket(path, close) {
 
   function message(m) {
     if (m.event)
-      return m.name !== 'error' && socket.emit('event', m.name || m.event, m.data)
+      return socket.emit('event', m.event, m)
 
     if (!requests.has(m.request_id))
       return m.error !== 'success' && socket.emit('error', Object.assign(new Error(m.error), m))
