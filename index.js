@@ -38,13 +38,13 @@ function Mpv({
   mpv.process.stderr.setEncoding('utf8')
   mpv.process.stdout.on('data', () => { /* noop - ensure drain of mpv */ })
   mpv.process.stderr.on('data', () => { /* noop - ensure drain of mpv */ })
-  mpv.process.on('error', err => mpv.emit('error', err))
+  mpv.process.on('error', error)
 
   mpv.socket = socket(
     args.find(x => x.startsWith(socketArg)).slice(socketArg.length + 1),
     err => {
       mpv.process.kill()
-      err && mpv.emit('error', err)
+      error(err)
     }
   )
   mpv.socket.on('event', (eventName, data) => mpv.emit(eventName, data))
@@ -54,6 +54,10 @@ function Mpv({
   mpv.get = (...args) => mpv.socket.send('get_property', ...args)
 
   return mpv
+
+  function error(x) {
+    mpv.emit('error', x)
+  }
 }
 
 module.exports = Mpv
