@@ -33,10 +33,14 @@ function Mpv({
   const kill = () => mpv.process.kill()
   process.on('exit', kill)
 
-  mpv.process.on('exit', () => process.off('exit', kill))
+  let lastStdErr = ''
+  mpv.process.on('exit', (x) => {
+    x !== 0 && error(lastStdErr || x)
+    process.off('exit', kill)
+  })
   mpv.process.stdout.setEncoding('utf8')
   mpv.process.stderr.setEncoding('utf8')
-  mpv.process.stdout.on('data', () => { /* noop - ensure drain of mpv */ })
+  mpv.process.stdout.on('data', x => lastStdErr = x)
   mpv.process.stderr.on('data', () => { /* noop - ensure drain of mpv */ })
   mpv.process.on('error', error)
 
