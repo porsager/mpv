@@ -19,5 +19,8 @@
     "mpv",
     "player",
     "mediaplayer"
-  ]
+  ],
+  "dependencies": {
+    "prexit": "1.0.0"
+  }
 }

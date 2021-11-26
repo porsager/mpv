@@ -2,13 +2,14 @@ const cp = require('child_process')
     , os = require('os')
     , events = require('events')
     , socket = require('./socket')
+    , prexit = require('prexit')
 
 const socketArg = '--input-ipc-server'
 const win32 = os.platform() === 'win32'
 
 function Mpv({
   args = [],
-  options = {},
+  options = { detached: true },
   path = win32 ? 'mpv.exe' : 'mpv'
 } = {}) {
   args = args.slice(0)
@@ -30,14 +31,10 @@ function Mpv({
 
   mpv.process = cp.spawn(path, args, options)
 
-  const kill = () => mpv.process.kill()
-  process.on('exit', kill)
+  prexit.last(() => mpv.process.kill())
 
   let lastStdErr = ''
-  mpv.process.on('exit', (x) => {
-    x !== 0 && error(lastStdErr || x)
-    process.off('exit', kill)
-  })
+  mpv.process.on('exit', x => x !== 0 && error(lastStdErr || x))
   mpv.process.stdout.setEncoding('utf8')
   mpv.process.stderr.setEncoding('utf8')
   mpv.process.stdout.on('data', x => lastStdErr = x)
