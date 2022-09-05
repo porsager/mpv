@@ -1,4 +1,4 @@
-# MPV
+# ▶️ MPV
 
 This library spawns [mpv](https://mpv.io) and talks to it using the [JSON IPC protocol](https://mpv.io/manual/master/#json-ipc).
 
