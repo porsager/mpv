@@ -3,13 +3,13 @@
   "version": "1.0.0",
   "description": "mpv player json ipc wrapper",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint *.js",
     "prepublishOnly": "npm run lint"
   },
   "files": [
-    "index.js",
-    "socket.js"
+    "index.js"
   ],
   "author": "Rasmus Porsager <rasmus@porsager.com>",
   "license": "WTFPL",
@@ -21,6 +21,6 @@
     "mediaplayer"
   ],
   "dependencies": {
-    "prexit": "1.0.0"
+    "prexit": "2.2.0"
   }
 }
