@@ -1,7 +1,7 @@
-import cp from 'node:child_process'
-import events from 'node:events'
-import fs from 'node:fs'
-import net from 'node:net'
+import cp from 'child_process'
+import events from 'events'
+import fs from 'fs'
+import net from 'net'
 
 import prexit from 'prexit'
 
