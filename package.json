@@ -6,6 +6,7 @@
   "type": "module",
   "scripts": {
     "lint": "eslint *.js",
+    "test": "echo some day",
     "prepublishOnly": "npm run lint"
   },
   "files": [
