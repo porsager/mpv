@@ -201,6 +201,8 @@ async function Mpv({
   }
 
   function command(...args) {
+    const error = new Error()
+    Error.captureStackTrace(error, command)
     return new Promise((resolve, reject) => {
       const id = ++requestId
       const request = {
@@ -217,6 +219,9 @@ async function Mpv({
       socket.readyState === 'open'
         ? write(request)
         : queue.push(request)
+    }).catch(e => {
+      error.message = e
+      throw error
     })
   }
 
