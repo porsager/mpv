@@ -10,6 +10,7 @@ export default Mpv
 async function Mpv({
   args = [],
   options = {},
+  stdout,
   path = process.platform === 'win32'
     ? fs.existsSync('mpv.exe') ? 'mpv.exe' : 'mpv'
     : fs.existsSync('mpv') ? './mpv' : 'mpv'
@@ -40,7 +41,7 @@ async function Mpv({
     '--audio-fallback-to-null=yes',
     '--no-config',
     '--idle',
-    '--msg-level=all=warn'
+    '--msg-level=all=error'
   ]
 
   defaults.forEach(a => args.some(x => x.startsWith(a.split('=')[0])) || args.push(a))
@@ -81,14 +82,14 @@ async function Mpv({
 
     try {
       mpv.process && end()
-      mpv.process = cp.spawn(path, args, {
-        stdio: ['ignore', 'ignore', 'pipe'],
-        ...options
-      })
+      mpv.process = cp.spawn(path, args, options)
 
       let stderr = ''
+
+      mpv.process.stdout.setEncoding('utf8')
       mpv.process.stderr.setEncoding('utf8')
-      mpv.process.stderr.on('data', x => stderr += x)
+      mpv.process.stdout.on('data', stdout || console.log)
+      mpv.process.stderr.on('data', x => stderr = (stderr + x).slice(-10000))
 
       await new Promise((resolve, reject) => {
         mpv.process.once('error', reject)
