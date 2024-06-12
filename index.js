@@ -19,7 +19,7 @@ async function Mpv({
   const socket = new net.Socket()
   const mpv = Object.assign(new events.EventEmitter(), {
     end,
-    status: 'stopped',
+    status: 'closed',
     set: (...args) => command('set_property', ...args),
     get: (...args) => command('get_property', ...args),
     command,
@@ -75,7 +75,7 @@ async function Mpv({
   }
 
   async function start(emit) {
-    if (mpv.status !== 'stopped')
+    if (mpv.status !== 'closed')
       return
 
     mpv.status = 'starting'
@@ -99,9 +99,10 @@ async function Mpv({
 
       ready()
       mpv.status = 'started'
-      emit && mpv.emit('restarted')
+      mpv.emit('started')
       mpv.process.on('close', () => {
-        mpv.status = 'stopped'
+        mpv.status = 'closed'
+        mpv.emit('closed')
         start(true).catch(e => mpv.emit('error', e))
       })
     } catch (error) {
