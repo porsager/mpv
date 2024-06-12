@@ -110,7 +110,7 @@ async function Mpv({
   }
 
   async function connect({
-    connectStart = process.hrtime.bigint() / 1000000n,
+    connectStart = ~~(process.hrtime()[0] * 1000 + process.hrtime()[1] / 1000000),
     timeout = 5000
   } = {}) {
     let resolve
@@ -135,7 +135,7 @@ async function Mpv({
     }
 
     function close() {
-      process.hrtime.bigint() / 1000000n - connectStart > timeout
+      ~~(process.hrtime()[0] * 1000 + process.hrtime()[1] / 1000000) - connectStart > timeout
         ? reject(error || new Error('Timed out'))
         : setTimeout(() => socket.connect(socketPath), 20)
     }
