@@ -153,7 +153,7 @@ async function Mpv({
     const id = ++observeId
     observers[x] = mpv.command('observe_property', id, x).then(result => {
       observers.set(x, { id, fns: new Set([fn]) })
-      return result
+      return observers.get(x)
     })
     return () => unobserve(x, fn)
   }
